@@ -6,12 +6,18 @@ import { Provider } from "react-redux";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import store from "./redux/store";
+import TagManager from "react-gtm-module";
+
+const trackingId = {
+    gtmId: process.env.REACT_APP_GTMID // Replace with your Google Analytics tracking ID
+}
+TagManager.initialize(trackingId)
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <Provider store={store}>
-    <App />
-  </Provider>
+    <Provider store={store}>
+        <App />
+    </Provider>
 );
 
 

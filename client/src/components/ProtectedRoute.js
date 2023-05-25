@@ -40,10 +40,37 @@ function ProtectedRoute(props) {
         if (!user) {
             getUser();
         }
-    }, [user]);
+    }, []);
 
     if (sessionStorage.getItem("token")) {
-        return props.children;
+        let pathName = window.location.pathname;
+        if (pathName.includes("/admin")) {
+            if (user?.role === "admin") {
+                return props.children;
+            }
+            else {
+                return <Navigate to="/not-found" />;
+            }
+        }
+        else if (pathName.includes("/user")) {
+            if (user?.role === "user") {
+                return props.children;
+            }
+            else {
+                return <Navigate to="/not-found" />;
+            }
+        }
+        else if (pathName.includes("/doctor")) {
+            if (user?.role === "doctor") {
+                return props.children;
+            }
+            else {
+                return <Navigate to="/not-found" />;
+            }
+        }
+        else {
+            return props.children;
+        }
     } else {
         return <Navigate to="/login" />;
     }
