@@ -1,0 +1,33 @@
+.doctor-card-main-container {
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  cursor: pointer;
+}
+
+.card-header-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  width: 100%;
+}
+
+.text-title {
+  opacity: 50%;
+  color: black;
+  font-weight: 400;
+  font-size: 15px;
+}
+
+.text-data {
+  color: black;
+  font-weight: 600;
+  font-size: 18px;
+}

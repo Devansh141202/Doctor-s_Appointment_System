@@ -5,7 +5,8 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { hideLoading, showLoading } from "../redux/alertsSlice";
-
+import "./Register.css";
+import registerImage from "./login-image.png";
 function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,33 +28,50 @@ function Register() {
   };
 
   return (
-    <div className="authentication">
-      <div className="authentication-form card p-3">
-        <h1 className="card-title">Nice To Meet U</h1>
-        <Form layout="vertical" onFinish={onFinish}>
-          <Form.Item label="Name" name="name">
-            <Input placeholder="Name" />
-          </Form.Item>
-          <Form.Item label="Email" name="email">
-            <Input placeholder="Email" />
-          </Form.Item>
-          <Form.Item label="Password" name="password">
-            <Input placeholder="Password" type="password" />
-          </Form.Item>
+    // <div className="authentication">
+    //   <div className="authentication-form card p-3">
+    //     <h1 className="card-title">Nice To Meet U</h1>
 
-          <Button
-            className="primary-button my-2 full-width-button"
-            htmlType="submit"
-          >
-            REGISTER
-          </Button>
+    //   </div>
+    // </div>
+    <>
+      {" "}
+      <div className="register-container">
+        <div className="register-inside-container">
+          <div className="register-main-container">
+            <div className="register-image-container">
+              <img src={registerImage} alt="register" />
+            </div>
+            <div className="register-main-part-container">
+              <div className="register-data">
+                <div className="register-logo">logo</div>
+                <div className="greeting-message">Nice To Meet You </div>
+                <Form layout="vertical" onFinish={onFinish}>
+                  <Form.Item label="Name" name="name">
+                    <Input placeholder="Name" />
+                  </Form.Item>
+                  <Form.Item label="Email" name="email">
+                    <Input placeholder="Email" />
+                  </Form.Item>
+                  <Form.Item label="Password" name="password">
+                    <Input placeholder="Password" type="password" />
+                  </Form.Item>
 
-          <Link to="/login" className="anchor mt-2">
-            CLICK HERE TO LOGIN
-          </Link>
-        </Form>
+                  <button className="register-button" htmlType="submit">
+                    REGISTER
+                  </button>
+
+                  <Link to="/login" className="link-for-login">
+                    <span> Already have an account ?</span>
+                    <span> Login here</span>
+                  </Link>
+                </Form>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

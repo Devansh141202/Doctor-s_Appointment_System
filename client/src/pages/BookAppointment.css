@@ -1,0 +1,126 @@
+.book-appointment-card-main-container {
+  border-radius: 10px;
+  padding: 40px;
+  margin: 10px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  flex-wrap: wrap;
+}
+
+.book-appointment-part-one {
+  flex: 1;
+  min-width: 200px;
+}
+.book-appointment-part-two {
+  flex: 2;
+  min-width: 300px;
+  padding-left: 40px;
+}
+
+.book-appointment-card-header-name {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-weight: 800;
+  font-size: 25px;
+  width: 100%;
+}
+
+.book-appointment-text-title {
+  opacity: 50%;
+  color: rgb(0, 0, 0);
+  font-weight: 400;
+  font-size: 15px;
+}
+.book-appointment-text-data {
+  color: rgb(147, 18, 18);
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.check-availability-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: #0066bb;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 15px;
+  padding: 20px;
+  cursor: pointer;
+  height: 24px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.check-availability-button:hover {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: #09538f;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 15px;
+  padding: 20px;
+  cursor: pointer;
+  height: 24px;
+  margin-top: 20px;
+}
+.book-now-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: #0066bb;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 15px;
+  padding: 20px;
+  cursor: pointer;
+  height: 24px;
+  margin-top: 20px;
+}
+.book-now-button:hover {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: #09538f;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 15px;
+  padding: 20px;
+  cursor: pointer;
+  height: 24px;
+  margin-top: 20px;
+}
+
+/* page not found button */
+.back-to-login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: #0066bb;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 15px;
+  padding: 20px;
+  cursor: pointer;
+  height: 24px;
+  margin-top: 20px;
+  width: 200px;
+}
