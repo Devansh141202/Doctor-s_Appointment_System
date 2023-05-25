@@ -1,0 +1,38 @@
+/* change password */
+.change-password-container {
+  border-radius: 10px;
+  padding: 40px;
+  margin: 10px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  flex-wrap: wrap;
+  width: 100%;
+}
+.change-password-container .form-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* profile-page */
+.profile-page-main-container {
+  border-radius: 10px;
+  padding: 40px;
+  margin: 10px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.profile-page {
+  padding-left: 100px;
+  width: 100%;
+}
