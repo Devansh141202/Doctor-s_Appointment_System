@@ -18,6 +18,7 @@ import Appointments from "./pages/Appointments";
 import DoctorAppointments from "./pages/Doctor/DoctorAppointments";
 import PageNotFound from "./pages/PageNotFound";
 import ForgotPassword from "./pages/ForgotPassword";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const { loading } = useSelector((state) => state.alerts);
@@ -128,6 +129,14 @@ function App() {
             <PublicRoute>
               <ForgotPassword />
             </PublicRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
           }
         />
 

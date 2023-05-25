@@ -87,6 +87,7 @@ function BookAppointment() {
           date: date,
           time: time,
         },
+        // "/api/user/email",
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
