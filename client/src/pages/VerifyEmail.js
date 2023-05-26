@@ -9,6 +9,7 @@ import "./Register.css";
 import ReCAPTCHA from "react-google-recaptcha";
 import './VerifyEmail.css'
 import mail_icon from './icon_mail.png'
+import MainLogo from "../logo1.png";
 // import icon_mail from '../../public/icon_mail.png';
 
 export default function VerifyEmail() {
@@ -43,7 +44,9 @@ export default function VerifyEmail() {
       <div className="register-container outer">
         <div className="register-inside-container inner">
           <div className="register-data">
-            <div className="register-logo">logo</div>
+        <div>
+          <img src={MainLogo} alt="logo" width={"100px"} height={"100px"} />
+        </div>
             <div className="greeting-message text">Pleae Verify Your Email Address</div>
             <Form layout="vertical" onFinish={onFinish} className="verify">
                <img src={mail_icon} alt="Mail Icon" /> 

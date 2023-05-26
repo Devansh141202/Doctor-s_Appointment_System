@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { hideLoading, showLoading } from "../redux/alertsSlice";
 import "./Register.css";
 import registerImage from "./login-image.png";
+import MainLogo from "../logo1.png";
 
 export default function ResetPassword() {
   const dispatch = useDispatch();
@@ -59,6 +60,11 @@ export default function ResetPassword() {
 
   return (
     <>
+        <div className="register-container outer">
+          <div className="register-inside-container inner" style={{height: "100%"}}>
+        <div style={{margin: "0px auto"}}>
+          <img src={MainLogo} alt="logo" width={"100px"} height={"100px"} />
+        </div>
       <div
         style={{
           display: "flex",
@@ -104,8 +110,8 @@ export default function ResetPassword() {
             <li>contain at least one special character</li>
           </ul>
         </div>
-        <div className="forgot-password-card">
-          <Form layout="vertical" onFinish={onFinish}>
+        <div className="forgot-password-card" style={{marginTop: "-10px", width: "60%"}}>
+          <Form layout="vertical" onFinish={onFinish}style={{width: "70%"}}>
             <Form.Item label="New Password" name="password">
               <Input placeholder="New Password" type="password" />
             </Form.Item>
@@ -124,6 +130,8 @@ export default function ResetPassword() {
           </Form>
         </div>
       </div>
+    </div>
+    </div>
     </>
   );
 }

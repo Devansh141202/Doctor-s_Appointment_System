@@ -4,14 +4,14 @@
 }
 
 .inner{
-    height: 60vh;
+    height: 70%;
 }
 
 .text{
     font-size: 20px !important;
     letter-spacing: 1px;
     font-weight: 200;
-    /* border: 2px solid red; */
+
 }
 
 .verify{
