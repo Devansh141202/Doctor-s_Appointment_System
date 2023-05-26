@@ -64,7 +64,7 @@ function Login() {
                                         ref={captchaRef} />
                                     <Link
                                         className="link-for-forgot-password"
-                                        to="/forgot-password"
+                                        to="/forgot-password/"
                                     >
                                         <span> forgot password ?</span>
                                     </Link>

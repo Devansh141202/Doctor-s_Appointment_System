@@ -317,6 +317,41 @@ router.get("/get-appointments-by-user-id", authMiddleware, async (req, res) => {
     }
 });
 
+
+router.post("/email", authMiddleware, async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const user = await User.findById(userId);
+        const mailOptions = {
+            to: ["tiwariketan11@gmail.com"], // user.email
+            subject: "Appointmet Confirmation Mail",
+            html: `<h1>Hi ${user.name}</h1>,
+            <p>Your appointment has been confirmed with ${req.body.doctorName} on ${req.body.date} at ${req.body.time}</p>`
+        };
+
+        const isSent = await mailService.sendMail(mailOptions);
+        if (isSent) {
+            return res.status(200).send({
+                message: "Email sent successfully",
+                success: true,
+            });
+        }
+        else {
+            return res.status(500).send({
+                message: "Error sending email",
+                success: false,
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            message: "Error sending email",
+            success: false,
+        });
+    }
+});
+
+
 router.post("/send-forgot-password-email", async (req, res) => {
     try {
         let { username, email } = req.body;
@@ -340,20 +375,24 @@ router.post("/send-forgot-password-email", async (req, res) => {
             username: user.username,
             email: user.email,
             createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+            isUsed: false,
         })
 
         if (auth.length == 0) {
-            auth = new Auth({
+            auth = await new Auth({
                 username: user.username,
                 email: user.email,
                 token: crypto.randomBytes(32).toString("hex"),
                 context: "forgot-password",
             }).save();
         }
+        else {
+            auth = auth[0];
+        }
         console.log(auth);
-        let link = `${process.env.BASE_URL}/reset-password/${auth[0].token}`;
+        let link = `${process.env.BASE_URL}/reset-password/${auth.token}`;
         const mailOptions = {
-            to: 'tiwariketan11@gmail.com',
+            to: 'tiwariketan11@gmail.com',  //user.email
             subject: 'Password Reset for Doctor Appointment System...',
             html: `
                 <!doctype html>
@@ -469,9 +508,11 @@ router.post("/reset-password/:token", async (req, res) => {
     try {
         let auth = await Auth.findOne({
             token: req.params.token,
+            createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+            isUsed: false,
         });
-
-        if (auth && auth.createdAt + 24 * 60 * 60 * 1000 < Date.now()) {
+        console.log(auth);
+        if (auth) {
             const password = req.body.password;
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
@@ -480,10 +521,65 @@ router.post("/reset-password/:token", async (req, res) => {
             }, {
                 password: hashedPassword,
             });
+            await Auth.findByIdAndUpdate(auth._id, { isUsed: true });
             console.log(user);
+            return res.status(200).send({
+                message: "Password reset successfully",
+                success: true,
+            });
+        }
+        else {
+            return res.status(500).send({
+                message: "Token expired",
+                success: false,
+            });
         }
     } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            message: "Error resetting password",
+            success: false,
+        });
     }
 });
 
+
+router.post("/change-password", authMiddleware, async (req, res) => {
+    try {
+        console.log(req.body);
+        const userId = req.body.userId;
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(200).send({
+                message: "User not found",
+                success: false,
+            });
+        }
+
+        const password = req.body.password;
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        let updatedUser = await User.findByIdAndUpdate(userId, { password: hashedPassword });
+        console.log(updatedUser);
+        if (updatedUser) {
+            return res.status(200).send({
+                message: "Password changed successfully",
+                success: true,
+            });
+        }
+        else {
+            return res.status(500).send({
+                message: "Error changing password",
+                success: false,
+            });
+        }
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            message: "Error changing password",
+            success: false,
+        });
+    }
+})
 module.exports = router;
