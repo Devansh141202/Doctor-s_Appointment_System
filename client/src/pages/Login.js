@@ -81,7 +81,6 @@ function Login() {
                     </div>
                 </div>
             </div>
-            <ForgotPassword />
         </>
     );
 }

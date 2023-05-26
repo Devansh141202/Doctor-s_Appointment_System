@@ -1,5 +1,5 @@
 import { Button, Form, Input } from "antd";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
@@ -8,11 +8,13 @@ import { hideLoading, showLoading } from "../redux/alertsSlice";
 import "./Register.css";
 
 import ReCAPTCHA from "react-google-recaptcha";
+import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 
 function Register() {
   const captchaRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const onFinish = async (values) => {
     console.log(values);
     const {
@@ -172,8 +174,19 @@ function Register() {
                   label="Password"
                   name="password"
                 >
-                  <Input placeholder="Password" type="password" />
+                  <Input
+                    placeholder="Password"
+                    type={showPassword ? "text" : "password"}
+                  />
                 </Form.Item>
+
+                {/* <button
+                  className="toggle-button"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <RiEyeOffLine /> : <RiEyeLine />}
+                </button> */}
+
                 <Form.Item
                   style={{ minWidth: "300px" }}
                   label="ConfirmPassword"
