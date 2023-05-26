@@ -1,0 +1,26 @@
+.outer{
+    width: 100% !important;
+    height: 100vh !important;
+}
+
+.inner{
+    height: 60vh;
+}
+
+.text{
+    font-size: 20px !important;
+    letter-spacing: 1px;
+    font-weight: 200;
+    /* border: 2px solid red; */
+}
+
+.verify{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.verify img{
+    width: 150px;
+    height: 150px;
+}

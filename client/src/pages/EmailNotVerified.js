@@ -49,8 +49,12 @@ export default function EmailNotVerified() {
 
     return (
         <>
-            <div className="register-container">
-                <div className="register-inside-container">
+            <div className="register-container" style={{
+                height: "100vh"
+            }}>
+                <div className="register-inside-container" style={{
+                    height: "70vh"
+                }}>
                     <div className="register-main-container">
                         <div className="register-image-container">
                             <img src={registerImage} alt="register" />
@@ -58,24 +62,23 @@ export default function EmailNotVerified() {
                         <div className="register-main-part-container">
                             <div className="register-data">
                                 <div className="register-logo">logo</div>
-                                <div className="greeting-message">Nice To Meet You</div>
+                                <div className="greeting-message" style={{
+                                    height: "90px",
+                                    fontSize: "14px"
+                                }}>Email verification link is sent to your email address.<br/>Click on below button to resend the link.</div>
                                 <Form layout="vertical" onFinish={onFinish}>
 
-                                    <button className="register-button" htmlType="submit">
+                                    <button className="register-button" htmlType="submit" style={{
+                                        margin: "10px auto"
+                                    }}>
                                         Resend Verification Email
                                     </button>
-
-                                    <Link to="/login" className="link-for-login">
-                                        <span> Already have an account ?</span>
-                                        <span> Login here</span>
-                                    </Link>
                                 </Form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </>
     );
 }

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../layout.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Badge } from "antd";
+import { Badge, Modal } from "antd";
 import { setUser } from "../redux/userSlice";
 import "../pages/Login.css";
 import { IoIosNotifications } from "react-icons/io";
@@ -11,6 +11,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 
 function Layout({ children }) {
     const [collapsed, setCollapsed] = useState(false);
+    const [isModalOpen, setIsModelOpen] = useState(false);
     const { user } = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -80,6 +81,14 @@ function Layout({ children }) {
             ? doctorMenu
             : userMenu;
     const role = (user?.role);
+
+    const conformLogout =() => {
+        setIsModelOpen(false);
+        sessionStorage.clear();
+        dispatch(setUser(null));
+        navigate("/login");
+    }
+
     return (
         <div className="main">
             <div className="d-flex layout">
@@ -109,14 +118,31 @@ function Layout({ children }) {
                         })}
                         <div
                             className={`d-flex menu-item `}
-                            onClick={() => {
-                                sessionStorage.clear();
-                                dispatch(setUser(null));
-                                navigate("/login");
-                            }}
                         >
                             <i className="ri-logout-circle-line"></i>
-                            {!collapsed && <Link to="/login">Logout</Link>}
+                            {!collapsed && <div 
+                            style={{
+                                cursor: "pointer",
+                            }}>
+                                <div 
+                                    style={{
+                                        color: "rgba(255, 255, 255, 0.716)",
+                                        textDecoration: "none",
+                                        fontSize: "18px",
+                                        padding: "0 10px"
+                                    }}
+                                    onClick={()=>setIsModelOpen(true)}
+                                >
+                                    Logout
+                                </div>
+                                <Modal
+                                    title="Are you sure ?"
+                                    visible={isModalOpen} 
+                                    onOk={()=>{conformLogout()}}
+                                    onCancel={()=>setIsModelOpen(false)}   
+                                >
+                                </Modal>
+                            </div>}
                         </div>
                     </div>
                 </div>
@@ -156,6 +182,7 @@ function Layout({ children }) {
                                         width: "50px",
                                         fontSize: "25px",
                                         marginRight: "10px",
+                                        cursor: "pointer"
                                     }}
                                 />
                             </Badge>

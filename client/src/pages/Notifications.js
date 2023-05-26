@@ -92,7 +92,7 @@ function Notifications() {
                                 borderRadius: "4px",
                             }}
                         >
-                            <IoCheckmarkDoneSharp style={{ marginRight: "5px" }} /> Mark all
+                            <IoCheckmarkDoneSharp style={{ marginRight: "5px", cursor: "pointer" }} /> Mark all
                             as seen
                         </button>
                     </div>
