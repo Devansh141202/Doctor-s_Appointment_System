@@ -10,11 +10,7 @@ import registerImage from "./login-image.png";
 import ReCAPTCHA from "react-google-recaptcha";
 import "./ForgotPassword.css";
 import ResetPassword from "./ResetPassword";
-<<<<<<< HEAD
-import VerifyEmail from "./VerifyEmail";
-=======
 import MainLogo from "../logo1.png";
->>>>>>> d7dd115359c729a2d92d0b1b3b6188983c95e8c2
 
 export default function ForgotPassword() {
   const captchaRef = useRef(null);
@@ -42,8 +38,7 @@ export default function ForgotPassword() {
 
   return (
     <>
-    <VerifyEmail></VerifyEmail>
-      {/* <div
+      <div
         style={{
           display: "flex",
           justifyContent: "center",
@@ -107,7 +102,7 @@ export default function ForgotPassword() {
             </Link>
           </Form>
         </div>
-      </div> */}
+      </div>
     </>
   );
 }
