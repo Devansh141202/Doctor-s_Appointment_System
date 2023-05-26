@@ -42,7 +42,7 @@ router.post("/register", async (req, res) => {
             req.body.password = hashedPassword;
             const newuser = new User(req.body);
             await newuser.save();
-            res
+            return res
                 .status(200)
                 .send({ message: "User created successfully", success: true });
         } else {
@@ -53,7 +53,7 @@ router.post("/register", async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        res
+        return res
             .status(500)
             .send({ message: "Error creating user", success: false, error });
     }
@@ -90,9 +90,9 @@ router.post("/login", async (req, res) => {
                     .send({ message: "Password is incorrect", success: false });
             } else {
                 const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-                    expiresIn: 10,
+                    expiresIn: "1 hour",
                 });
-                res
+                return res
                     .status(200)
                     .send({ message: "Login successful", success: true, data: token });
             }
@@ -104,9 +104,7 @@ router.post("/login", async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        res
-            .status(500)
-            .send({ message: "Error logging in", success: false, error });
+        return res.status(500).send({ message: "Error logging in", success: false, error });
     }
 });
 
@@ -120,13 +118,13 @@ router.post("/get-user-info-by-id", authMiddleware, async (req, res) => {
                 .send({ message: "User does not exist", success: false });
         } else {
             console.log(user);
-            res.status(200).send({
+            return res.status(200).send({
                 success: true,
                 data: user,
             });
         }
     } catch (error) {
-        res
+        return res
             .status(500)
             .send({ message: "Error getting user info", success: false, error });
     }
@@ -151,13 +149,13 @@ router.post("/apply-doctor-account", authMiddleware, async (req, res) => {
 
         await User.findByIdAndUpdate(adminUser._id, { unseenNotifications });
 
-        res.status(200).send({
+        return res.status(200).send({
             success: true,
             message: "Doctor account applied successfully",
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(500).send({
             message: "Error applying doctor account",
             success: false,
             error,
@@ -175,21 +173,20 @@ router.post("/mark-all-notifications-as-seen", authMiddleware, async (req, res) 
         user.seenNotifications = seenNotifications;
         const updatedUser = await user.save();
         updatedUser.password = undefined;
-        res.status(200).send({
+        return res.status(200).send({
             success: true,
             message: "All notifications marked as seen",
             data: updatedUser,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(500).send({
             message: "Error applying doctor account",
             success: false,
             error,
         });
     }
-}
-);
+});
 
 router.post("/delete-all-notifications", authMiddleware, async (req, res) => {
     try {
@@ -198,14 +195,14 @@ router.post("/delete-all-notifications", authMiddleware, async (req, res) => {
         user.unseenNotifications = [];
         const updatedUser = await user.save();
         updatedUser.password = undefined;
-        res.status(200).send({
+        return res.status(200).send({
             success: true,
             message: "All notifications cleared",
             data: updatedUser,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(500).send({
             message: "Error applying doctor account",
             success: false,
             error,
@@ -216,14 +213,14 @@ router.post("/delete-all-notifications", authMiddleware, async (req, res) => {
 router.get("/get-all-approved-doctors", authMiddleware, async (req, res) => {
     try {
         const doctors = await Doctor.find({ status: "approved" });
-        res.status(200).send({
+        return res.status(200).send({
             message: "Doctors fetched successfully",
             success: true,
             data: doctors,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(500).send({
             message: "Error applying doctor account",
             success: false,
             error,
@@ -246,13 +243,13 @@ router.post("/book-appointment", authMiddleware, async (req, res) => {
             onClickPath: "/doctor/appointments",
         });
         await user.save();
-        res.status(200).send({
+        return res.status(200).send({
             message: "Appointment booked successfully",
             success: true,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(500).send({
             message: "Error booking appointment",
             success: false,
             error,
@@ -286,7 +283,7 @@ router.post("/check-booking-avilability", authMiddleware, async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(500).send({
             message: "Error booking appointment",
             success: false,
             error,
@@ -297,14 +294,14 @@ router.post("/check-booking-avilability", authMiddleware, async (req, res) => {
 router.get("/get-appointments-by-user-id", authMiddleware, async (req, res) => {
     try {
         const appointments = await Appointment.find({ userId: req.body.userId });
-        res.status(200).send({
+        return res.status(200).send({
             message: "Appointments fetched successfully",
             success: true,
             data: appointments,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(500).send({
             message: "Error fetching appointments",
             success: false,
             error,
