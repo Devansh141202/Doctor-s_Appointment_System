@@ -21,7 +21,7 @@ export default function VerifyEmail() {
     try {
       dispatch(showLoading());
       console.log(`/api/user${window.location.pathname}`);
-      const response = await axios.get(`/api/user${window.location.pathname}`);
+      const response = await axios.get(`http://34.131.197.1/api/user${window.location.pathname}`);
       dispatch(hideLoading());
       if (response.data.success) {
         toast.success(response.data.message);

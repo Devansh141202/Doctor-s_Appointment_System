@@ -85,7 +85,7 @@ function Register() {
             }
             values.token = token;
             delete values.confirmPassword;
-            const response = await axios.post("/api/user/register", values);
+            const response = await axios.post("http://34.131.197.1/api/user/register", values);
             dispatch(hideLoading());
             if (response.data.success) {
                 toast.success(response.data.message);

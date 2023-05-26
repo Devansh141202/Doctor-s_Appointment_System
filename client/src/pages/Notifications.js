@@ -18,7 +18,7 @@ function Notifications() {
         try {
             dispatch(showLoading());
             const response = await axios.post(
-                "/api/user/mark-all-notifications-as-seen",
+                "http://34.131.197.1/api/user/mark-all-notifications-as-seen",
                 { userId: user._id },
                 {
                     headers: {
@@ -49,7 +49,7 @@ function Notifications() {
         try {
             dispatch(showLoading());
             const response = await axios.post(
-                "/api/user/delete-all-notifications",
+                "http://34.131.197.1/api/user/delete-all-notifications",
                 { userId: user._id },
                 {
                     headers: {

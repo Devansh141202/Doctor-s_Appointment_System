@@ -15,7 +15,7 @@ function DoctorsList() {
     const getDoctorsData = async () => {
         try {
             dispatch(showLoading());
-            const resposne = await axios.get("/api/admin/get-all-doctors", {
+            const resposne = await axios.get("http://34.131.197.1/api/admin/get-all-doctors", {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
                 },
@@ -39,7 +39,7 @@ function DoctorsList() {
         try {
             dispatch(showLoading());
             const resposne = await axios.post(
-                "/api/admin/change-doctor-account-status",
+                "http://34.131.197.1/api/admin/change-doctor-account-status",
                 { doctorId: record._id, userId: record.userId, status: status },
                 {
                     headers: {

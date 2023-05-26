@@ -38,7 +38,7 @@ function App() {
   const dispatch = useDispatch();
   async function checkServer() {
     try {
-      const response = await axios.get("/api/").catch((err) => {
+      const response = await axios.get("http://34.131.197.1/api/").catch((err) => {
         console.log(err);
         dispatch(setServerStatus(false));
       });

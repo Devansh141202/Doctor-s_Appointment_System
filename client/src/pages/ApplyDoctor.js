@@ -17,7 +17,7 @@ function ApplyDoctor() {
         try {
             dispatch(showLoading());
             const response = await axios.post(
-                "/api/user/apply-doctor-account",
+                "http://34.131.197.1/api/user/apply-doctor-account",
                 {
                     ...values,
                     userId: user._id,

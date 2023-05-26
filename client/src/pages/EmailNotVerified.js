@@ -21,7 +21,7 @@ export default function EmailNotVerified() {
       dispatch(showLoading());
       console.log(`/api/user${window.location.pathname}`);
       const response = await axios
-        .get(`/api/user/resend-verification-email`, {
+        .get(`http://34.131.197.1/api/user/resend-verification-email`, {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },

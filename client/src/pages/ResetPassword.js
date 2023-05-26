@@ -42,7 +42,7 @@ export default function ResetPassword() {
 
       console.log(`/api/user${window.location.pathname}`);
       const response = await axios.post(
-        `/api/user${window.location.pathname}`,
+        `http://34.131.197.1/api/user${window.location.pathname}`,
         values
       );
       dispatch(hideLoading());

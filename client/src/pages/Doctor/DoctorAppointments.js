@@ -17,7 +17,7 @@ function DoctorAppointments() {
         try {
             dispatch(showLoading());
             const resposne = await axios.get(
-                "/api/doctor/get-appointments-by-doctor-id",
+                "http://34.131.197.1/api/doctor/get-appointments-by-doctor-id",
                 {
                     headers: {
                         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -43,7 +43,7 @@ function DoctorAppointments() {
         try {
             dispatch(showLoading());
             const resposne = await axios.post(
-                "/api/doctor/change-appointment-status",
+                "http://34.131.197.1/api/doctor/change-appointment-status",
                 { appointmentId: record._id, status: status },
                 {
                     headers: {

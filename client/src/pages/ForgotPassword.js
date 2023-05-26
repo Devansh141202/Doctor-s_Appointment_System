@@ -21,7 +21,7 @@ export default function ForgotPassword() {
     try {
       dispatch(showLoading());
       const response = await axios.post(
-        "/api/user/send-forgot-password-email",
+        "http://34.131.197.1/api/user/send-forgot-password-email",
         values
       );
       dispatch(hideLoading());

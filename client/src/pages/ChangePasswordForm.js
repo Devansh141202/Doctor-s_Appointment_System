@@ -55,7 +55,7 @@ export default function ChangePasswordForm() {
             }
 
             //api for change password
-            const response = await axios.post(`/api/user/change-password`, {
+            const response = await axios.post(`http://34.131.197.1/api/user/change-password`, {
                 password: newPassword,
             }, {
                 headers: {

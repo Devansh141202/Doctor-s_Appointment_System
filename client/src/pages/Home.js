@@ -15,7 +15,7 @@ function Home() {
     const getData = async () => {
         try {
             dispatch(showLoading())
-            const response = await axios.get("/api/user/get-all-approved-doctors", {
+            const response = await axios.get("http://34.131.197.1/api/user/get-all-approved-doctors", {
                 headers: {
                     Authorization: "Bearer " + sessionStorage.getItem("token"),
                 },

@@ -25,7 +25,7 @@ function Login() {
                 return toast.error("Please verify that you are not a robot");
             }
             values.token = token;
-            const response = await axios.post("/api/user/login", values);
+            const response = await axios.post("http://34.131.197.1/api/user/login", values);
             dispatch(hideLoading());
             if (response.data.success) {
                 toast.success(response.data.message);
