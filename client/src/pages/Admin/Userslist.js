@@ -5,10 +5,13 @@ import { showLoading, hideLoading } from "../../redux/alertsSlice";
 import axios from "axios";
 import { Table } from "antd";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 function Userslist() {
     const [users, setUsers] = useState([]);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const getUsersData = async () => {
         try {
             dispatch(showLoading());
@@ -16,6 +19,12 @@ function Userslist() {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
                 },
+            }).catch((error) => {
+                if (error.response.status) {
+                    toast.error('Session Expired');
+                    sessionStorage.clear();
+                    navigate("/login");
+                }
             });
             dispatch(hideLoading());
             if (resposne.data.success) {

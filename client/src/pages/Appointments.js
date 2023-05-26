@@ -6,21 +6,31 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { Table } from "antd";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 function Appointments() {
     const [appointments, setAppointments] = useState([]);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const getAppointmentsData = async () => {
         try {
             dispatch(showLoading());
-            const resposne = await axios.get("/api/user/get-appointments-by-user-id", {
+            const response = await axios.get("/api/user/get-appointments-by-user-id", {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
                 },
+            }).catch((error) => {
+                if (error.response.status) {
+                    toast.error('Session Expired');
+                    sessionStorage.clear();
+                    navigate("/login");
+                }
             });
             dispatch(hideLoading());
-            if (resposne.data.success) {
-                setAppointments(resposne.data.data);
+            console.log(response.data);
+            if (response.data.success) {
+                setAppointments(response.data.data);
             }
         } catch (error) {
             dispatch(hideLoading());

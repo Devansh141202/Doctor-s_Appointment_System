@@ -5,10 +5,11 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { hideLoading, showLoading } from "../redux/alertsSlice";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function ChangePasswordForm() {
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
     const [passwords, setPasswords] = useState({
         newPassword: "",
         confirmPassword: "",
@@ -54,15 +55,19 @@ export default function ChangePasswordForm() {
             }
 
             //api for change password
-            const response = await axios(`/api/user/change-password`, {
-                method: "POST",
+            const response = await axios.post(`/api/user/change-password`, {
+                password: newPassword,
+            }, {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
                 },
-                data: {
-                    password: newPassword,
-                },
-            })
+            }).catch((error) => {
+                if (error.response.status) {
+                    toast.error('Session Expired');
+                    sessionStorage.clear();
+                    navigate("/login");
+                }
+            });
 
             dispatch(hideLoading());
             if (response.data.success) {

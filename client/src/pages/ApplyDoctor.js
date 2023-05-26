@@ -31,7 +31,13 @@ function ApplyDoctor() {
                         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
                     },
                 }
-            );
+            ).catch((error) => {
+                if (error.response.status) {
+                    toast.error('Session Expired');
+                    sessionStorage.clear();
+                    navigate("/login");
+                }
+            });
             dispatch(hideLoading());
             if (response.data.success) {
                 toast.success(response.data.message);

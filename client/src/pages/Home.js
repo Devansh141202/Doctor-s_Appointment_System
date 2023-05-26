@@ -5,9 +5,13 @@ import { Col, Row } from "antd";
 import Doctor from "../components/Doctor";
 import { useDispatch, useSelector } from "react-redux";
 import { showLoading, hideLoading } from "../redux/alertsSlice";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+
 function Home() {
     const [doctors, setDoctors] = useState([]);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const getData = async () => {
         try {
             dispatch(showLoading())
@@ -15,6 +19,12 @@ function Home() {
                 headers: {
                     Authorization: "Bearer " + sessionStorage.getItem("token"),
                 },
+            }).catch((error) => {
+                if (error.response.status) {
+                    toast.error('Session Expired');
+                    sessionStorage.clear();
+                    navigate("/login");
+                }
             });
             dispatch(hideLoading())
             if (response.data.success) {
