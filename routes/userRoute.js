@@ -16,7 +16,6 @@ const crypto = require("crypto");
 router.post("/register", async (req, res) => {
     try {
         const token = req.body.token;
-        console.log(token);
         const response = await axios.post(
             `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`
         );
@@ -63,7 +62,6 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     try {
         const token = req.body.token;
-        console.log(token);
         const response = await axios.post(
             `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`
         );
@@ -167,33 +165,30 @@ router.post("/apply-doctor-account", authMiddleware, async (req, res) => {
     }
 });
 
-router.post(
-    "/mark-all-notifications-as-seen",
-    authMiddleware,
-    async (req, res) => {
-        try {
-            const user = await User.findOne({ _id: req.body.userId });
-            const unseenNotifications = user.unseenNotifications;
-            const seenNotifications = user.seenNotifications;
-            seenNotifications.push(...unseenNotifications);
-            user.unseenNotifications = [];
-            user.seenNotifications = seenNotifications;
-            const updatedUser = await user.save();
-            updatedUser.password = undefined;
-            res.status(200).send({
-                success: true,
-                message: "All notifications marked as seen",
-                data: updatedUser,
-            });
-        } catch (error) {
-            console.log(error);
-            res.status(500).send({
-                message: "Error applying doctor account",
-                success: false,
-                error,
-            });
-        }
+router.post("/mark-all-notifications-as-seen", authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findOne({ _id: req.body.userId });
+        const unseenNotifications = user.unseenNotifications;
+        const seenNotifications = user.seenNotifications;
+        seenNotifications.push(...unseenNotifications);
+        user.unseenNotifications = [];
+        user.seenNotifications = seenNotifications;
+        const updatedUser = await user.save();
+        updatedUser.password = undefined;
+        res.status(200).send({
+            success: true,
+            message: "All notifications marked as seen",
+            data: updatedUser,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            message: "Error applying doctor account",
+            success: false,
+            error,
+        });
     }
+}
 );
 
 router.post("/delete-all-notifications", authMiddleware, async (req, res) => {
@@ -317,7 +312,6 @@ router.get("/get-appointments-by-user-id", authMiddleware, async (req, res) => {
     }
 });
 
-
 router.post("/email", authMiddleware, async (req, res) => {
     try {
         const userId = req.body.userId;
@@ -350,7 +344,6 @@ router.post("/email", authMiddleware, async (req, res) => {
         });
     }
 });
-
 
 router.post("/send-forgot-password-email", async (req, res) => {
     try {
@@ -503,7 +496,6 @@ router.post("/send-forgot-password-email", async (req, res) => {
     }
 });
 
-
 router.post("/reset-password/:token", async (req, res) => {
     try {
         let auth = await Auth.findOne({
@@ -543,7 +535,6 @@ router.post("/reset-password/:token", async (req, res) => {
     }
 });
 
-
 router.post("/change-password", authMiddleware, async (req, res) => {
     try {
         console.log(req.body);
@@ -581,5 +572,7 @@ router.post("/change-password", authMiddleware, async (req, res) => {
             success: false,
         });
     }
-})
+});
+
+
 module.exports = router;

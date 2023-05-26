@@ -26,14 +26,17 @@ const userSchema = new mongoose.Schema(
             enum: ["user", "doctor", "admin"],
             default: "user",
         },
-        // isDoctor: {
-        //     type: Boolean,
-        //     default: false,
-        // },
-        // isAdmin: {
-        //     type: Boolean,
-        //     default: false,
-        // },
+        mobileNumber: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        whatsappNumber: {
+            type: String,
+            required: true,
+            unique: true,
+            default: "",
+        },
         seenNotifications: {
             type: Array,
             default: [],
