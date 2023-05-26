@@ -9,6 +9,7 @@ import "./Login.css";
 import LoginImage from "./login-image.png";
 import ForgotPassword from "./ForgotPassword";
 import ReCAPTCHA from "react-google-recaptcha";
+import MainLogo from "../logo1.png";
 
 function Login() {
     const captchaRef = useRef(null);
@@ -50,7 +51,9 @@ function Login() {
                         </div>
                         <div className="login-main-part-container">
                             <div className="login-data">
-                                <div className="login-logo">logo</div>
+                            <div>
+                                <img src={MainLogo} alt="logo" width={"100px"} height={"100px"} />
+                            </div>
                                 <div className="greeting-message">Welcome back</div>
                                 <Form layout="vertical" onFinish={onFinish}>
                                     <Form.Item label="Email" name="email">
