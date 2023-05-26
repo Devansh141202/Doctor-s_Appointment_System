@@ -10,6 +10,7 @@ const Appointment = require("../models/appointmentModel");
 const moment = require("moment");
 const axios = require("axios");
 const mailService = require("../controller/mailSender");
+const sendEmail = require("../utils/sendEmail")
 const crypto = require("crypto");
 const { sendVerificationMail, getAuth } = require("../controller/sentVerificationMail");
 
@@ -43,7 +44,7 @@ router.post("/register", async (req, res) => {
             req.body.password = hashedPassword;
             const newuser = new User(req.body);
             await newuser.save();
-            const isSent = await sentVerificationMail(newuser);
+            const isSent = await sendVerificationMail(newuser);
             if (!isSent) {
                 console.log("Error sending verification mail");
             }
@@ -638,5 +639,18 @@ router.get("/resend-verification-email", authMiddleware, async (req, res) => {
         });
     }
 });
+
+router.post("/send-confirmation-email", async(req, res) => {
+    try {
+        await sendEmail();
+
+        res.status(200).json({
+            success: true,
+            message: `Email sent successfully`,
+        });
+    } catch (error) {
+        console.log(err);
+    }
+})
 
 module.exports = router;

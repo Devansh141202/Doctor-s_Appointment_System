@@ -38,7 +38,15 @@ function DoctorAppointments() {
             dispatch(hideLoading());
         }
     };
-
+    const sendEmail = async () => {
+        try {
+            const config = { headers: { "Content-Type": "application/json" } };
+            const { data } = await axios.post('http://localhost:5000/api/user/send-confirmation-email', config);
+            console.log(data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const changeAppointmentStatus = async (record, status) => {
         try {
             dispatch(showLoading());
@@ -49,7 +57,8 @@ function DoctorAppointments() {
                     headers: {
                         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
                     },
-                }
+                },
+                sendEmail()
             ).catch((error) => {
                 if (error.response.status) {
                     toast.error('Session Expired');
