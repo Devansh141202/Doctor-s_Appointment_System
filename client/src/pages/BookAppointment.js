@@ -128,7 +128,7 @@ function BookAppointment() {
                   justifyContent: "center",
                   width: "100%",
                   flexDirection: "column",
-                  gap: "20px",
+                  gap: "15px",
                 }}
               >
                 <div className="phone-number">
@@ -180,7 +180,7 @@ function BookAppointment() {
                   style={{ width: "100%", borderBottom: "1px solid black" }}
                 />
                 <DatePicker
-                  style={{ width: "100%" }}
+                  style={{ width: "50%" }}
                   format="DD-MM-YYYY"
                   onChange={(value) => {
                     setDate(moment(value).format("DD-MM-YYYY"));
@@ -188,7 +188,7 @@ function BookAppointment() {
                   }}
                 />
                 <TimePicker
-                  style={{ width: "100%" }}
+                  style={{ width: "50%" }}
                   format="HH:mm"
                   onChange={(value) => {
                     setIsAvailable(false);

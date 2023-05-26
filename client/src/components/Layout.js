@@ -164,7 +164,7 @@ function Layout({ children }) {
                                     borderLeft: "2px solid black",
                                     padding: "5px",
                                 }}
-                                to="/profile"
+                                to="/profile-page"
                             >
                                 <FaUserCircle style={{ margin: "5px", fontSize: "25px" }} />
                                 {user?.name}

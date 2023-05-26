@@ -15,7 +15,9 @@ export default function ProfilePage() {
       <Layout>
         <div className="profile-page-main-container">
           <div className="profile-page">
-            <div className="book-appointment-card-header-name">Dr.</div>
+            <div className="book-appointment-card-header-name">
+              Dr. {user?.name}
+            </div>
             <hr style={{ width: "100%", borderBottom: "1px solid black" }} />
             <div
               style={{
@@ -28,50 +30,50 @@ export default function ProfilePage() {
               }}
             >
               <div className="phone-number">
-                <div className="book-appointment-text-title">Phone Number</div>
+                <div className="book-appointment-text-title">username</div>
                 <div className="book-appointment-text-data">
-                  doctor.phoneNumber
+                  {user?.username}
                 </div>
               </div>
               <div className="address">
-                <div className="book-appointment-text-title">Address</div>
-                <div className="book-appointment-text-data">
-                  doctor.phoneNumber
-                </div>
+                <div className="book-appointment-text-title">Email</div>
+                <div className="book-appointment-text-data">{user?.email}</div>
               </div>
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "space-between",
+                  justifyContent: "flex-start",
                   flexWrap: "wrap",
-                  gap: "20px",
+                  gap: "200px",
                   width: "100%",
                 }}
               >
                 <div className="timing">
-                  <div className="book-appointment-text-title">Timings</div>
+                  <div className="book-appointment-text-title">
+                    Phone Number
+                  </div>
                   <div className="book-appointment-text-data">
-                    doctor.phoneNumber
+                    {user?.phonenumber || `+91`}
                   </div>
                 </div>
                 <div className="charge-per-visit">
                   <div className="book-appointment-text-title">
-                    Charge Per Visit
+                    Whatsapp Number
                   </div>
                   <div className="book-appointment-text-data">
-                    doctor.phoneNumber ₹
+                  {user?.wnumber || `+91`}
                   </div>
                 </div>
               </div>
               <div className="website">
-                <div className="book-appointment-text-title">Website</div>
+                <div className="book-appointment-text-title">Password</div>
                 <div className="book-appointment-text-data">
-                  doctor.phoneNumber
+                  ********************
                 </div>
               </div>
               <button
-                className="check-availability-button"
+                className="change-password-button"
                 onClick={changePasswordButtonHandler}
               >
                 Change Password
