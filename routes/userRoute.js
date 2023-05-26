@@ -11,6 +11,7 @@ const moment = require("moment");
 const axios = require("axios");
 const mailService = require("../controller/mailSender");
 const crypto = require("crypto");
+const { default: sentVerificationMail, getToken } = require("../controller/sentVerificationMail");
 
 
 router.post("/register", async (req, res) => {
@@ -42,6 +43,10 @@ router.post("/register", async (req, res) => {
             req.body.password = hashedPassword;
             const newuser = new User(req.body);
             await newuser.save();
+            const isSent = await sentVerificationMail(newuser);
+            if (!isSent) {
+                console.log("Error sending verification mail");
+            }
             return res
                 .status(200)
                 .send({ message: "User created successfully", success: true });
@@ -361,24 +366,8 @@ router.post("/send-forgot-password-email", async (req, res) => {
         }
         console.log(user);
 
-        let auth = await Auth.find({
-            username: user.username,
-            email: user.email,
-            createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-            isUsed: false,
-        })
+        let auth = getAuth(user, 'forgot-password');
 
-        if (auth.length == 0) {
-            auth = await new Auth({
-                username: user.username,
-                email: user.email,
-                token: crypto.randomBytes(32).toString("hex"),
-                context: "forgot-password",
-            }).save();
-        }
-        else {
-            auth = auth[0];
-        }
         console.log(auth);
         let link = `${process.env.BASE_URL}/reset-password/${auth.token}`;
         const mailOptions = {
@@ -499,6 +488,7 @@ router.post("/reset-password/:token", async (req, res) => {
             token: req.params.token,
             createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
             isUsed: false,
+            context: "forgot-password",
         });
         console.log(auth);
         if (auth) {
@@ -534,7 +524,6 @@ router.post("/reset-password/:token", async (req, res) => {
 
 router.post("/change-password", authMiddleware, async (req, res) => {
     try {
-        console.log(req.body);
         const userId = req.body.userId;
         const user = await User.findById(userId);
         if (!user) {
@@ -571,5 +560,83 @@ router.post("/change-password", authMiddleware, async (req, res) => {
     }
 });
 
+router.post("/verify-email/:token", async (req, res) => {
+    try {
+        let auth = await Auth.findOne({
+            token: req.params.token,
+            createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+            isUsed: false,
+            context: "email-verification",
+        });
+        console.log(auth);
+        if (auth) {
+            const user = await User.findOneAndUpdate({
+                username: auth.username,
+            }, {
+                isVerified: true,
+            });
+            await Auth.findByIdAndUpdate(auth._id, { isUsed: true });
+            console.log(user);
+            return res.status(200).send({
+                message: "Email verified successfully",
+                success: true,
+            });
+        }
+        else {
+            return res.status(500).send({
+                message: "Token expired",
+                success: false,
+            });
+        }
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            message: "Error verifying email",
+            success: false,
+        });
+    }
+});
+
+router.post("/resend-verification-email", authMiddleware, async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(200).send({
+                message: "User not found",
+                success: false,
+            });
+        }
+        if (user.isEmailVerified) {
+            return res.status(200).send({
+                message: "Email already verified",
+                success: true,
+            });
+        }
+
+        const isSent = await sentVerificationMail(user);
+        if (isSent) {
+            return res.status(200).send({
+                message: "Email sent successfully",
+                success: true,
+            });
+        }
+        else {
+            return res.status(500).send({
+                message: "Error sending email",
+                success: false,
+            });
+        }
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            message: "Error sending email",
+            success: false,
+        });
+    }
+});
 
 module.exports = router;
