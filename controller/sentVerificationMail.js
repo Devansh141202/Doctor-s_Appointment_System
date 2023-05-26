@@ -7,7 +7,7 @@ async function sendVerificationMail(user) {
     let auth = await getAuth(user, 'email-verification');
     let link = `${process.env.BASE_URL}/verify-email/${auth.token}`;
     const mailOptions = {
-        to: 'tiwariketan11@gmail.com',  // user.email
+        to: user.email,  // user.email
         subject: 'Email Verification For Appelion Account',
         html: `
                 <!doctype html>

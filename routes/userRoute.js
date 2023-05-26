@@ -340,7 +340,7 @@ router.post("/send-forgot-password-email", async (req, res) => {
         console.log(auth);
         let link = `${process.env.BASE_URL}/reset-password/${auth.token}`;
         const mailOptions = {
-            to: 'tiwariketan11@gmail.com',  //user.email
+            to: user.email,  //user.email
             subject: 'Password Reset for Doctor Appointment System...',
             html: `
                 <!doctype html>
