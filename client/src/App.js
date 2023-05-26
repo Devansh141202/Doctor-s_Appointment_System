@@ -28,24 +28,18 @@ function App() {
     const { isUp } = useSelector((state) => state.serverStatus);
     const { loading } = useSelector((state) => state.alerts);
     const dispatch = useDispatch();
-
-    // const [serverStatus, setServerStatus] = useState(false);
-    // true === up , false === down
     async function checkServer() {
         try {
             const response = await axios.get("/api/").catch((err) => {
                 console.log(err);
-                // setServerStatus(false);
                 dispatch(setServerStatus(false));
             });
             if (response.data.success) {
                 console.log("Server is up and running");
-                // setServerStatus(true);
                 dispatch(setServerStatus(true));
             }
         } catch (error) {
             console.log("Server is down");
-            // setServerStatus(false);
             dispatch(setServerStatus(false));
         }
     }

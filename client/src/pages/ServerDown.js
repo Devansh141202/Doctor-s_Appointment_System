@@ -1,8 +1,11 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setServerStatus } from "../redux/serverStatusSlice";
 
 export default function ServerDown() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     return (
         <>
             <div
@@ -22,7 +25,11 @@ export default function ServerDown() {
                 <div style={{ fontSize: "30px", fontWeight: "700" }}>
                     Page Not Found
                 </div>
-                <button onClick={() => navigate(`/`)} className="back-to-login-button">
+                <button onClick={() => {
+                    navigate(`/`);
+                    dispatch(setServerStatus(true));
+                }}
+                    className="back-to-login-button">
                     {" "}
                     Back To Home
                 </button>
