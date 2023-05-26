@@ -10,7 +10,11 @@ import registerImage from "./login-image.png";
 import ReCAPTCHA from "react-google-recaptcha";
 import "./ForgotPassword.css";
 import ResetPassword from "./ResetPassword";
+<<<<<<< HEAD
 import VerifyEmail from "./VerifyEmail";
+=======
+import MainLogo from "../logo1.png";
+>>>>>>> d7dd115359c729a2d92d0b1b3b6188983c95e8c2
 
 export default function ForgotPassword() {
   const captchaRef = useRef(null);
@@ -18,7 +22,7 @@ export default function ForgotPassword() {
   const navigate = useNavigate();
   const onFinish = async (values) => {
     console.log(values);
-    try { 
+    try {
       dispatch(showLoading());
       const response = await axios.post(
         "/api/user/send-forgot-password-email",
@@ -47,10 +51,13 @@ export default function ForgotPassword() {
           flexDirection: "column",
           width: "100%",
           gap: "10px",
-          marginTop: "100px",
+          marginTop: "50px",
           padding: "10px",
         }}
       >
+        <div>
+          <img src={MainLogo} alt="logo" width={"100px"} height={"100px"} />
+        </div>
         <div
           style={{
             fontSize: "40px",

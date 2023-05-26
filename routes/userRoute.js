@@ -10,6 +10,7 @@ const Appointment = require("../models/appointmentModel");
 const moment = require("moment");
 const axios = require("axios");
 const mailService = require("../controller/mailSender");
+const sendEmail = require("../utils/sendEmail")
 const crypto = require("crypto");
 const { sendVerificationMail, getAuth } = require("../controller/sentVerificationMail");
 
@@ -43,7 +44,7 @@ router.post("/register", async (req, res) => {
             req.body.password = hashedPassword;
             const newuser = new User(req.body);
             await newuser.save();
-            const isSent = await sentVerificationMail(newuser);
+            const isSent = await sendVerificationMail(newuser);
             if (!isSent) {
                 console.log("Error sending verification mail");
             }
@@ -314,38 +315,6 @@ router.get("/get-appointments-by-user-id", authMiddleware, async (req, res) => {
     }
 });
 
-router.post("/email", authMiddleware, async (req, res) => {
-    try {
-        const userId = req.body.userId;
-        const user = await User.findById(userId);
-        const mailOptions = {
-            to: ["tiwariketan11@gmail.com"], // user.email
-            subject: "Appointmet Confirmation Mail",
-            html: `<h1>Hi ${user.name}</h1>,
-            <p>Your appointment has been confirmed with ${req.body.doctorName} on ${req.body.date} at ${req.body.time}</p>`
-        };
-
-        const isSent = await mailService.sendMail(mailOptions);
-        if (isSent) {
-            return res.status(200).send({
-                message: "Email sent successfully",
-                success: true,
-            });
-        }
-        else {
-            return res.status(200).send({
-                message: "Error sending email",
-                success: false,
-            });
-        }
-    } catch (error) {
-        console.log(error);
-        return res.status(200).send({
-            message: "Error sending email",
-            success: false,
-        });
-    }
-});
 
 router.post("/send-forgot-password-email", async (req, res) => {
     try {

@@ -49,7 +49,7 @@ function DoctorAppointments() {
                     headers: {
                         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
                     },
-                }
+                },
             ).catch((error) => {
                 if (error.response.status) {
                     toast.error('Session Expired');

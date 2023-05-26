@@ -4,6 +4,7 @@ const Doctor = require("../models/doctorModel");
 const authMiddleware = require("../middlewares/authMiddleware");
 const Appointment = require("../models/appointmentModel");
 const User = require("../models/userModel");
+const sendConfirmationEmail = require("../utils/sendEmail");
 
 router.post("/get-doctor-info-by-user-id", authMiddleware, async (req, res) => {
     try {
@@ -93,6 +94,9 @@ router.post("/change-appointment-status", authMiddleware, async (req, res) => {
 
         await user.save();
 
+        let isSent = await sendConfirmationEmail(appointmentId);
+
+        console.log("isSent", isSent);
         return res.status(200).send({
             message: "Appointment status updated successfully",
             success: true
