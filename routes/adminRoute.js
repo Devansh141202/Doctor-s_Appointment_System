@@ -8,14 +8,14 @@ router.get("/get-all-doctors", authMiddleware, async (req, res) => {
     try {
         const doctors = await Doctor.find({});
         console.log(doctors);
-        res.status(200).send({
+        return res.status(200).send({
             message: "Doctors fetched successfully",
             success: true,
             data: doctors,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(200).send({
             message: "Error applying doctor account",
             success: false,
             error,
@@ -26,14 +26,14 @@ router.get("/get-all-doctors", authMiddleware, async (req, res) => {
 router.get("/get-all-users", authMiddleware, async (req, res) => {
     try {
         const users = await User.find({});
-        res.status(200).send({
+        return res.status(200).send({
             message: "Users fetched successfully",
             success: true,
             data: users,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(200).send({
             message: "Error applying doctor account",
             success: false,
             error,
@@ -59,14 +59,14 @@ router.post("/change-doctor-account-status", authMiddleware, async (req, res) =>
         user.role = status === "approved" ? "doctor" : "user";
         await user.save();
 
-        res.status(200).send({
+        return res.status(200).send({
             message: "Doctor status updated successfully",
             success: true,
             data: doctor,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(200).send({
             message: "Error applying doctor account",
             success: false,
             error,

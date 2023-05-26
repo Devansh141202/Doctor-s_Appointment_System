@@ -1,11 +1,11 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { Button } from "antd";
 import { Toaster } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 import Home from "./pages/Home";
-import { useSelector } from "react-redux";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import ApplyDoctor from "./pages/ApplyDoctor";
@@ -20,9 +20,33 @@ import PageNotFound from "./pages/PageNotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import ProfilePage from "./pages/ProfilePage";
 import ResetPassword from "./pages/ResetPassword";
+import ServerDown from "./pages/ServerDown";
+import axios from "axios";
+import { setServerStatus } from "./redux/serverStatusSlice";
+import VerifyEmail from "./pages/VerifyEmail";
+import EmailNotVerified from "./pages/EmailNotVerified";
 
 function App() {
+    const { isUp } = useSelector((state) => state.serverStatus);
     const { loading } = useSelector((state) => state.alerts);
+    const dispatch = useDispatch();
+    async function checkServer() {
+        try {
+            const response = await axios.get("/api/").catch((err) => {
+                console.log(err);
+                dispatch(setServerStatus(false));
+            });
+            if (response.data.success) {
+                console.log("Server is up and running");
+                dispatch(setServerStatus(true));
+            }
+        } catch (error) {
+            console.log("Server is down");
+            dispatch(setServerStatus(false));
+        }
+    }
+    checkServer();
+
     return (
         <BrowserRouter>
             {loading && (
@@ -35,117 +59,175 @@ function App() {
                 <Route
                     path="/login"
                     element={
-                        <PublicRoute>
-                            <Login />
-                        </PublicRoute>
+                        isUp ? (
+                            <PublicRoute>
+                                <Login />
+                            </PublicRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
                     }
                 />
                 <Route
                     path="/register"
                     element={
-                        <PublicRoute>
-                            <Register />
-                        </PublicRoute>
+                        isUp ? (
+                            <PublicRoute>
+                                <Register />
+                            </PublicRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
                     }
                 />
                 <Route
                     path="/"
                     element={
-                        <ProtectedRoute>
-                            <Home />
-                        </ProtectedRoute>
+                        isUp ? (
+                            <ProtectedRoute>
+                                <Home />
+                            </ProtectedRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
                     }
                 />
                 <Route
                     path="/user/apply-doctor"
                     element={
-                        <ProtectedRoute>
-                            <ApplyDoctor />
-                        </ProtectedRoute>
+                        isUp ? (
+                            <ProtectedRoute>
+                                <ApplyDoctor />
+                            </ProtectedRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
                     }
                 />
                 <Route
                     path="/notifications"
                     element={
-                        <ProtectedRoute>
-                            <Notifications />
-                        </ProtectedRoute>
+                        isUp ? (
+                            <ProtectedRoute>
+                                <Notifications />
+                            </ProtectedRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
                     }
                 />
                 <Route
                     path="/admin/userslist"
                     element={
-                        <ProtectedRoute>
-                            <Userslist />
-                        </ProtectedRoute>
+                        isUp ? (
+                            <ProtectedRoute>
+                                <Userslist />
+                            </ProtectedRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
                     }
                 />
 
                 <Route
                     path="/admin/doctorslist"
                     element={
-                        <ProtectedRoute>
-                            <DoctorsList />
-                        </ProtectedRoute>
+                        isUp ? (
+                            <ProtectedRoute>
+                                <DoctorsList />
+                            </ProtectedRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
                     }
                 />
 
                 <Route
                     path="/doctor/profile/:userId"
                     element={
-                        <ProtectedRoute>
-                            <Profile />
-                        </ProtectedRoute>
+                        isUp ? (
+                            <ProtectedRoute>
+                                <Profile />
+                            </ProtectedRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
                     }
                 />
 
                 <Route
                     path="/book-appointment/:doctorId"
                     element={
-                        <ProtectedRoute>
-                            <BookAppointment />
-                        </ProtectedRoute>
+                        isUp ? (
+                            <ProtectedRoute>
+                                <BookAppointment />
+                            </ProtectedRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
                     }
                 />
                 <Route
                     path="/appointments"
                     element={
-                        <ProtectedRoute>
-                            <Appointments />
-                        </ProtectedRoute>
+                        isUp ? (
+                            <ProtectedRoute>
+                                <Appointments />
+                            </ProtectedRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
                     }
                 />
 
                 <Route
                     path="/doctor/appointments"
                     element={
-                        <ProtectedRoute>
-                            <DoctorAppointments />
-                        </ProtectedRoute>
+                        isUp ? (
+                            <ProtectedRoute>
+                                <DoctorAppointments />
+                            </ProtectedRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
                     }
                 />
                 <Route
                     path="/forgot-password"
                     element={
-                        <PublicRoute>
-                            <ForgotPassword />
-                        </PublicRoute>
+                        isUp ? (
+                            <PublicRoute>
+                                <ForgotPassword />
+                            </PublicRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
                     }
                 />
                 <Route
                     path="/reset-password/:token"
                     element={
-                        <PublicRoute>
-                            <ResetPassword />
-                        </PublicRoute>
+                        isUp ? (
+                            <PublicRoute>
+                                <ResetPassword />
+                            </PublicRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
                     }
                 />
                 <Route
                     path="/profile-page"
                     element={
-                        <ProtectedRoute>
-                            <ProfilePage />
-                        </ProtectedRoute>
+                        isUp ? (
+                            <ProtectedRoute>
+                                <ProfilePage />
+                            </ProtectedRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
+                    }
+                />
+                <Route
+                    path="/email-not-verified"
+                    element={
+                        isUp ? (
+                            <ProtectedRoute>
+                                <EmailNotVerified />
+                            </ProtectedRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
+                    }
+                />
+                <Route
+                    path="/verify-email/:token"
+                    element={
+                        isUp ? (
+                            <PublicRoute>
+                                <VerifyEmail />
+                            </PublicRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
+                    }
+                />
+                <Route
+                    path="/server-down"
+                    element={
+                        !isUp ? (
+                            <PublicRoute>
+                                <ServerDown />
+                            </PublicRoute>
+                        ) : (<Navigate replace to={"/"} />)
                     }
                 />
 

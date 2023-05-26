@@ -11,6 +11,7 @@ const moment = require("moment");
 const axios = require("axios");
 const mailService = require("../controller/mailSender");
 const crypto = require("crypto");
+const { sendVerificationMail, getAuth } = require("../controller/sentVerificationMail");
 
 
 router.post("/register", async (req, res) => {
@@ -42,7 +43,11 @@ router.post("/register", async (req, res) => {
             req.body.password = hashedPassword;
             const newuser = new User(req.body);
             await newuser.save();
-            res
+            const isSent = await sentVerificationMail(newuser);
+            if (!isSent) {
+                console.log("Error sending verification mail");
+            }
+            return res
                 .status(200)
                 .send({ message: "User created successfully", success: true });
         } else {
@@ -53,8 +58,8 @@ router.post("/register", async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        res
-            .status(500)
+        return res
+            .status(200)
             .send({ message: "Error creating user", success: false, error });
     }
 });
@@ -90,9 +95,9 @@ router.post("/login", async (req, res) => {
                     .send({ message: "Password is incorrect", success: false });
             } else {
                 const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-                    expiresIn: 10,
+                    expiresIn: "1 hour",
                 });
-                res
+                return res
                     .status(200)
                     .send({ message: "Login successful", success: true, data: token });
             }
@@ -104,9 +109,7 @@ router.post("/login", async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        res
-            .status(500)
-            .send({ message: "Error logging in", success: false, error });
+        return res.status(200).send({ message: "Error logging in", success: false, error });
     }
 });
 
@@ -120,14 +123,14 @@ router.post("/get-user-info-by-id", authMiddleware, async (req, res) => {
                 .send({ message: "User does not exist", success: false });
         } else {
             console.log(user);
-            res.status(200).send({
+            return res.status(200).send({
                 success: true,
                 data: user,
             });
         }
     } catch (error) {
-        res
-            .status(500)
+        return res
+            .status(200)
             .send({ message: "Error getting user info", success: false, error });
     }
 });
@@ -151,13 +154,13 @@ router.post("/apply-doctor-account", authMiddleware, async (req, res) => {
 
         await User.findByIdAndUpdate(adminUser._id, { unseenNotifications });
 
-        res.status(200).send({
+        return res.status(200).send({
             success: true,
             message: "Doctor account applied successfully",
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(200).send({
             message: "Error applying doctor account",
             success: false,
             error,
@@ -175,21 +178,20 @@ router.post("/mark-all-notifications-as-seen", authMiddleware, async (req, res) 
         user.seenNotifications = seenNotifications;
         const updatedUser = await user.save();
         updatedUser.password = undefined;
-        res.status(200).send({
+        return res.status(200).send({
             success: true,
             message: "All notifications marked as seen",
             data: updatedUser,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(200).send({
             message: "Error applying doctor account",
             success: false,
             error,
         });
     }
-}
-);
+});
 
 router.post("/delete-all-notifications", authMiddleware, async (req, res) => {
     try {
@@ -198,14 +200,14 @@ router.post("/delete-all-notifications", authMiddleware, async (req, res) => {
         user.unseenNotifications = [];
         const updatedUser = await user.save();
         updatedUser.password = undefined;
-        res.status(200).send({
+        return res.status(200).send({
             success: true,
             message: "All notifications cleared",
             data: updatedUser,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(200).send({
             message: "Error applying doctor account",
             success: false,
             error,
@@ -216,14 +218,14 @@ router.post("/delete-all-notifications", authMiddleware, async (req, res) => {
 router.get("/get-all-approved-doctors", authMiddleware, async (req, res) => {
     try {
         const doctors = await Doctor.find({ status: "approved" });
-        res.status(200).send({
+        return res.status(200).send({
             message: "Doctors fetched successfully",
             success: true,
             data: doctors,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(200).send({
             message: "Error applying doctor account",
             success: false,
             error,
@@ -246,13 +248,13 @@ router.post("/book-appointment", authMiddleware, async (req, res) => {
             onClickPath: "/doctor/appointments",
         });
         await user.save();
-        res.status(200).send({
+        return res.status(200).send({
             message: "Appointment booked successfully",
             success: true,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(200).send({
             message: "Error booking appointment",
             success: false,
             error,
@@ -286,7 +288,7 @@ router.post("/check-booking-avilability", authMiddleware, async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(200).send({
             message: "Error booking appointment",
             success: false,
             error,
@@ -297,14 +299,14 @@ router.post("/check-booking-avilability", authMiddleware, async (req, res) => {
 router.get("/get-appointments-by-user-id", authMiddleware, async (req, res) => {
     try {
         const appointments = await Appointment.find({ userId: req.body.userId });
-        res.status(200).send({
+        return res.status(200).send({
             message: "Appointments fetched successfully",
             success: true,
             data: appointments,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(200).send({
             message: "Error fetching appointments",
             success: false,
             error,
@@ -331,14 +333,14 @@ router.post("/email", authMiddleware, async (req, res) => {
             });
         }
         else {
-            return res.status(500).send({
+            return res.status(200).send({
                 message: "Error sending email",
                 success: false,
             });
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error sending email",
             success: false,
         });
@@ -364,24 +366,8 @@ router.post("/send-forgot-password-email", async (req, res) => {
         }
         console.log(user);
 
-        let auth = await Auth.find({
-            username: user.username,
-            email: user.email,
-            createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-            isUsed: false,
-        })
+        let auth = getAuth(user, 'forgot-password');
 
-        if (auth.length == 0) {
-            auth = await new Auth({
-                username: user.username,
-                email: user.email,
-                token: crypto.randomBytes(32).toString("hex"),
-                context: "forgot-password",
-            }).save();
-        }
-        else {
-            auth = auth[0];
-        }
         console.log(auth);
         let link = `${process.env.BASE_URL}/reset-password/${auth.token}`;
         const mailOptions = {
@@ -403,7 +389,7 @@ router.post("/send-forgot-password-email", async (req, res) => {
                 <body marginheight="0" topmargin="0" marginwidth="0" style="margin: 0px; background-color: #f2f3f8;" leftmargin="0">
                     <!--100% body table-->
                     <table cellspacing="0" border="0" cellpadding="0" width="100%" bgcolor="#f2f3f8"
-                        style="@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif;">
+                        style="@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,200,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif;">
                         <tr>
                             <td>
                                 <table style="background-color: #f2f3f8; max-width:670px;  margin:0 auto;" width="100%" border="0"
@@ -431,7 +417,7 @@ router.post("/send-forgot-password-email", async (req, res) => {
                                                 </tr>
                                                 <tr>
                                                     <td style="padding:0 35px;">
-                                                        <h1 style="color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;">You have
+                                                        <h1 style="color:#1e1e2d; font-weight:200; margin:0;font-size:32px;font-family:'Rubik',sans-serif;">You have
                                                             requested to reset your password</h1>
                                                         <span
                                                             style="display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;"></span>
@@ -442,7 +428,7 @@ router.post("/send-forgot-password-email", async (req, res) => {
                                                         </p>
                                                         <!-- URL TO BE SENT TO THE Password -->
                                                         <a href="${link}"
-                                                            style="background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset
+                                                            style="background:#20e277;text-decoration:none !important; font-weight:200; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset
                                                             Password</a>
                                                     </td>
                                                 </tr>
@@ -481,7 +467,7 @@ router.post("/send-forgot-password-email", async (req, res) => {
             });
         }
         else {
-            return res.status(500).send({
+            return res.status(200).send({
                 message: "Error sending email",
                 success: false,
             });
@@ -489,7 +475,7 @@ router.post("/send-forgot-password-email", async (req, res) => {
     }
     catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error sending email",
             success: false,
         });
@@ -502,6 +488,7 @@ router.post("/reset-password/:token", async (req, res) => {
             token: req.params.token,
             createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
             isUsed: false,
+            context: "forgot-password",
         });
         console.log(auth);
         if (auth) {
@@ -521,14 +508,14 @@ router.post("/reset-password/:token", async (req, res) => {
             });
         }
         else {
-            return res.status(500).send({
+            return res.status(200).send({
                 message: "Token expired",
                 success: false,
             });
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error resetting password",
             success: false,
         });
@@ -537,7 +524,6 @@ router.post("/reset-password/:token", async (req, res) => {
 
 router.post("/change-password", authMiddleware, async (req, res) => {
     try {
-        console.log(req.body);
         const userId = req.body.userId;
         const user = await User.findById(userId);
         if (!user) {
@@ -559,7 +545,7 @@ router.post("/change-password", authMiddleware, async (req, res) => {
             });
         }
         else {
-            return res.status(500).send({
+            return res.status(200).send({
                 message: "Error changing password",
                 success: false,
             });
@@ -567,12 +553,90 @@ router.post("/change-password", authMiddleware, async (req, res) => {
     }
     catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error changing password",
             success: false,
         });
     }
 });
 
+router.get("/verify-email/:token", async (req, res) => {
+    try {
+        let auth = await Auth.findOne({
+            token: req.params.token,
+            createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+            isUsed: false,
+            context: "email-verification",
+        });
+        console.log(auth);
+        if (auth) {
+            const user = await User.findOneAndUpdate({
+                username: auth.username,
+            }, {
+                isEmailVerified: true,
+            });
+            await Auth.findByIdAndUpdate(auth._id, { isUsed: true });
+            console.log(user);
+            return res.status(200).send({
+                message: "Email verified successfully",
+                success: true,
+            });
+        }
+        else {
+            return res.status(200).send({
+                message: "Token expired",
+                success: false,
+            });
+        }
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(200).send({
+            message: "Error verifying email",
+            success: false,
+        });
+    }
+});
+
+router.get("/resend-verification-email", authMiddleware, async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(200).send({
+                message: "User not found",
+                success: false,
+            });
+        }
+        if (user.isEmailVerified) {
+            return res.status(200).send({
+                message: "Email already verified",
+                success: true,
+            });
+        }
+
+        const isSent = await sendVerificationMail(user);
+        if (isSent) {
+            return res.status(200).send({
+                message: "Email sent successfully",
+                success: true,
+            });
+        }
+        else {
+            return res.status(200).send({
+                message: "Error sending email",
+                success: false,
+            });
+        }
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(200).send({
+            message: "Error sending email",
+            success: false,
+        });
+    }
+});
 
 module.exports = router;
