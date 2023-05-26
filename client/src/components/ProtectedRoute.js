@@ -24,9 +24,6 @@ function ProtectedRoute(props) {
             );
             dispatch(hideLoading());
             if (response.data.success) {
-                if (response.data.data.isEmailVerified === false) {
-                    navigate("/email-not-verified");
-                }
                 dispatch(setUser(response.data.data));
             } else {
                 sessionStorage.clear()
@@ -43,15 +40,13 @@ function ProtectedRoute(props) {
         if (!user) {
             getUser();
         }
-        else {
-            if (user.isEmailVerified === false) {
-                navigate("/email-not-verified");
-            }
-        }
     }, []);
 
     if (sessionStorage.getItem("token")) {
         let pathName = window.location.pathname;
+        if (user?.isEmailVerified === false && pathName !== "/email-not-verified") {
+            return <Navigate to="/email-not-verified" />;
+        }
         if (pathName.includes("/admin")) {
             if (user?.role === "admin") {
                 return props.children;
