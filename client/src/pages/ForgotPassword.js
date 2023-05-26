@@ -17,7 +17,7 @@ export default function ForgotPassword() {
   const navigate = useNavigate();
   const onFinish = async (values) => {
     console.log(values);
-    try {
+    try { 
       dispatch(showLoading());
       const response = await axios.post(
         "/api/user/send-forgot-password-email",
@@ -37,7 +37,7 @@ export default function ForgotPassword() {
 
   return (
     <>
-      {/* <div
+      <div
         style={{
           display: "flex",
           justifyContent: "center",
@@ -98,8 +98,7 @@ export default function ForgotPassword() {
             </Link>
           </Form>
         </div>
-      </div> */}
-      <ResetPassword />
+      </div>
     </>
   );
 }
