@@ -15,7 +15,7 @@ router.get("/get-all-doctors", authMiddleware, async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error applying doctor account",
             success: false,
             error,
@@ -33,7 +33,7 @@ router.get("/get-all-users", authMiddleware, async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error applying doctor account",
             success: false,
             error,
@@ -66,7 +66,7 @@ router.post("/change-doctor-account-status", authMiddleware, async (req, res) =>
         });
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error applying doctor account",
             success: false,
             error,

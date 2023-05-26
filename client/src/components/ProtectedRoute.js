@@ -24,6 +24,9 @@ function ProtectedRoute(props) {
             );
             dispatch(hideLoading());
             if (response.data.success) {
+                if (response.data.data.isEmailVerified === false) {
+                    navigate("/email-not-verified");
+                }
                 dispatch(setUser(response.data.data));
             } else {
                 sessionStorage.clear()
@@ -39,6 +42,11 @@ function ProtectedRoute(props) {
     useEffect(() => {
         if (!user) {
             getUser();
+        }
+        else {
+            if (user.isEmailVerified === false) {
+                navigate("/email-not-verified");
+            }
         }
     }, []);
 

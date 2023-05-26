@@ -11,7 +11,7 @@ const moment = require("moment");
 const axios = require("axios");
 const mailService = require("../controller/mailSender");
 const crypto = require("crypto");
-const { default: sentVerificationMail, getToken } = require("../controller/sentVerificationMail");
+const { sendVerificationMail, getAuth } = require("../controller/sentVerificationMail");
 
 
 router.post("/register", async (req, res) => {
@@ -59,7 +59,7 @@ router.post("/register", async (req, res) => {
     } catch (error) {
         console.log(error);
         return res
-            .status(500)
+            .status(200)
             .send({ message: "Error creating user", success: false, error });
     }
 });
@@ -109,7 +109,7 @@ router.post("/login", async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).send({ message: "Error logging in", success: false, error });
+        return res.status(200).send({ message: "Error logging in", success: false, error });
     }
 });
 
@@ -130,7 +130,7 @@ router.post("/get-user-info-by-id", authMiddleware, async (req, res) => {
         }
     } catch (error) {
         return res
-            .status(500)
+            .status(200)
             .send({ message: "Error getting user info", success: false, error });
     }
 });
@@ -160,7 +160,7 @@ router.post("/apply-doctor-account", authMiddleware, async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error applying doctor account",
             success: false,
             error,
@@ -185,7 +185,7 @@ router.post("/mark-all-notifications-as-seen", authMiddleware, async (req, res) 
         });
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error applying doctor account",
             success: false,
             error,
@@ -207,7 +207,7 @@ router.post("/delete-all-notifications", authMiddleware, async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error applying doctor account",
             success: false,
             error,
@@ -225,7 +225,7 @@ router.get("/get-all-approved-doctors", authMiddleware, async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error applying doctor account",
             success: false,
             error,
@@ -254,7 +254,7 @@ router.post("/book-appointment", authMiddleware, async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error booking appointment",
             success: false,
             error,
@@ -288,7 +288,7 @@ router.post("/check-booking-avilability", authMiddleware, async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error booking appointment",
             success: false,
             error,
@@ -306,7 +306,7 @@ router.get("/get-appointments-by-user-id", authMiddleware, async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error fetching appointments",
             success: false,
             error,
@@ -333,14 +333,14 @@ router.post("/email", authMiddleware, async (req, res) => {
             });
         }
         else {
-            return res.status(500).send({
+            return res.status(200).send({
                 message: "Error sending email",
                 success: false,
             });
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error sending email",
             success: false,
         });
@@ -389,7 +389,7 @@ router.post("/send-forgot-password-email", async (req, res) => {
                 <body marginheight="0" topmargin="0" marginwidth="0" style="margin: 0px; background-color: #f2f3f8;" leftmargin="0">
                     <!--100% body table-->
                     <table cellspacing="0" border="0" cellpadding="0" width="100%" bgcolor="#f2f3f8"
-                        style="@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif;">
+                        style="@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,200,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif;">
                         <tr>
                             <td>
                                 <table style="background-color: #f2f3f8; max-width:670px;  margin:0 auto;" width="100%" border="0"
@@ -417,7 +417,7 @@ router.post("/send-forgot-password-email", async (req, res) => {
                                                 </tr>
                                                 <tr>
                                                     <td style="padding:0 35px;">
-                                                        <h1 style="color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;">You have
+                                                        <h1 style="color:#1e1e2d; font-weight:200; margin:0;font-size:32px;font-family:'Rubik',sans-serif;">You have
                                                             requested to reset your password</h1>
                                                         <span
                                                             style="display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;"></span>
@@ -428,7 +428,7 @@ router.post("/send-forgot-password-email", async (req, res) => {
                                                         </p>
                                                         <!-- URL TO BE SENT TO THE Password -->
                                                         <a href="${link}"
-                                                            style="background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset
+                                                            style="background:#20e277;text-decoration:none !important; font-weight:200; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset
                                                             Password</a>
                                                     </td>
                                                 </tr>
@@ -467,7 +467,7 @@ router.post("/send-forgot-password-email", async (req, res) => {
             });
         }
         else {
-            return res.status(500).send({
+            return res.status(200).send({
                 message: "Error sending email",
                 success: false,
             });
@@ -475,7 +475,7 @@ router.post("/send-forgot-password-email", async (req, res) => {
     }
     catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error sending email",
             success: false,
         });
@@ -508,14 +508,14 @@ router.post("/reset-password/:token", async (req, res) => {
             });
         }
         else {
-            return res.status(500).send({
+            return res.status(200).send({
                 message: "Token expired",
                 success: false,
             });
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error resetting password",
             success: false,
         });
@@ -545,7 +545,7 @@ router.post("/change-password", authMiddleware, async (req, res) => {
             });
         }
         else {
-            return res.status(500).send({
+            return res.status(200).send({
                 message: "Error changing password",
                 success: false,
             });
@@ -553,14 +553,14 @@ router.post("/change-password", authMiddleware, async (req, res) => {
     }
     catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error changing password",
             success: false,
         });
     }
 });
 
-router.post("/verify-email/:token", async (req, res) => {
+router.get("/verify-email/:token", async (req, res) => {
     try {
         let auth = await Auth.findOne({
             token: req.params.token,
@@ -573,7 +573,7 @@ router.post("/verify-email/:token", async (req, res) => {
             const user = await User.findOneAndUpdate({
                 username: auth.username,
             }, {
-                isVerified: true,
+                isEmailVerified: true,
             });
             await Auth.findByIdAndUpdate(auth._id, { isUsed: true });
             console.log(user);
@@ -583,7 +583,7 @@ router.post("/verify-email/:token", async (req, res) => {
             });
         }
         else {
-            return res.status(500).send({
+            return res.status(200).send({
                 message: "Token expired",
                 success: false,
             });
@@ -591,14 +591,14 @@ router.post("/verify-email/:token", async (req, res) => {
     }
     catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error verifying email",
             success: false,
         });
     }
 });
 
-router.post("/resend-verification-email", authMiddleware, async (req, res) => {
+router.get("/resend-verification-email", authMiddleware, async (req, res) => {
     try {
         const userId = req.body.userId;
         const user = await User.findById(userId);
@@ -616,7 +616,7 @@ router.post("/resend-verification-email", authMiddleware, async (req, res) => {
             });
         }
 
-        const isSent = await sentVerificationMail(user);
+        const isSent = await sendVerificationMail(user);
         if (isSent) {
             return res.status(200).send({
                 message: "Email sent successfully",
@@ -624,7 +624,7 @@ router.post("/resend-verification-email", authMiddleware, async (req, res) => {
             });
         }
         else {
-            return res.status(500).send({
+            return res.status(200).send({
                 message: "Error sending email",
                 success: false,
             });
@@ -632,7 +632,7 @@ router.post("/resend-verification-email", authMiddleware, async (req, res) => {
     }
     catch (error) {
         console.log(error);
-        return res.status(500).send({
+        return res.status(200).send({
             message: "Error sending email",
             success: false,
         });

@@ -23,6 +23,8 @@ import ResetPassword from "./pages/ResetPassword";
 import ServerDown from "./pages/ServerDown";
 import axios from "axios";
 import { setServerStatus } from "./redux/serverStatusSlice";
+import VerifyEmail from "./pages/VerifyEmail";
+import EmailNotVerified from "./pages/EmailNotVerified";
 
 function App() {
     const { isUp } = useSelector((state) => state.serverStatus);
@@ -195,6 +197,26 @@ function App() {
                             <ProtectedRoute>
                                 <ProfilePage />
                             </ProtectedRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
+                    }
+                />
+                <Route
+                    path="/email-not-verified"
+                    element={
+                        isUp ? (
+                            <ProtectedRoute>
+                                <EmailNotVerified />
+                            </ProtectedRoute>
+                        ) : (<Navigate replace to={"/server-down"} />)
+                    }
+                />
+                <Route
+                    path="/verify-email/:token"
+                    element={
+                        isUp ? (
+                            <PublicRoute>
+                                <VerifyEmail />
+                            </PublicRoute>
                         ) : (<Navigate replace to={"/server-down"} />)
                     }
                 />

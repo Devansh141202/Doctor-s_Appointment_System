@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const serverStatusSlice = createSlice({
     name: "server-status",
     initialState: {
-        isUp: false
+        isUp: true
     },
     reducers: {
         setServerStatus: (state, action) => {
