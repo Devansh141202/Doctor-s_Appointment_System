@@ -6,8 +6,7 @@ import { showLoading, hideLoading } from "../../redux/alertsSlice";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import DoctorForm from "../../components/DoctorForm";
-import moment from "moment";
+import DoctorFormAdmin from "../../components/DoctorFormAdmin";
 
 function DoctorProfile() {
     const { user } = useSelector((state) => state.user);
@@ -15,8 +14,6 @@ function DoctorProfile() {
     const [doctor, setDoctor] = useState(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const onFinish = () => { }
 
     const getDoctorData = async () => {
         try {
@@ -58,7 +55,7 @@ function DoctorProfile() {
             <h1 className="page-title">Doctor Profile</h1>
             <hr />
             {console.log(doctor)}
-            {doctor && <DoctorForm onFinish={onFinish} initivalValues={doctor} />}
+            {doctor && <DoctorFormAdmin initivalValues={doctor} />}
         </Layout>
     );
 }

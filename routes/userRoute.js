@@ -267,10 +267,16 @@ router.post("/check-booking-avilability", authMiddleware, async (req, res) => {
     try {
         const date = moment(req.body.date, "DD-MM-YYYY").toISOString();
         const fromTime = moment(req.body.time, "HH:mm")
-            .subtract(1, "hours")
             .toISOString();
         const toTime = moment(req.body.time, "HH:mm").add(1, "hours").toISOString();
         const doctorId = req.body.doctorId;
+        const doctor = await Doctor.findById({ _id: doctorId });
+        if (!(req.body.time >= doctor.timings[0] && req.body.time <= doctor.timings[1])) {
+            return res.status(200).send({
+                message: "Appointments not available",
+                success: false,
+            });
+        }
         const appointments = await Appointment.find({
             doctorId,
             date,
