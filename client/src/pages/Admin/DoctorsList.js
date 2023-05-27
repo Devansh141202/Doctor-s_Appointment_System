@@ -102,17 +102,29 @@ function DoctorsList() {
                             Approve
                         </h1>
                     )}
-                    {record.status === "approved" && (
+                    {/* {record.status === "approved" && (
                         <h1
                             className="anchor"
                             onClick={() => changeDoctorStatus(record, "blocked")}
                         >
                             Block
                         </h1>
-                    )}
+                    )} */}
                 </div>
             ),
         },
+        {
+            title: "View",
+            dataIndex: "view",
+            render: (text, record) => (
+                <div className="d-flex">
+                    <h1
+                        className="anchor"
+                        onClick={() => navigate(`/admin/doc/${record.userId}`)}
+                    > View </h1 >
+                </div>
+            )
+        }
     ];
     return (
         <Layout>

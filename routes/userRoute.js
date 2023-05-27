@@ -335,7 +335,7 @@ router.post("/send-forgot-password-email", async (req, res) => {
         }
         console.log(user);
 
-        let auth = getAuth(user, 'forgot-password');
+        let auth = await getAuth(user, 'forgot-password');
 
         console.log(auth);
         let link = `${process.env.BASE_URL}/reset-password/${auth.token}`;

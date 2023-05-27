@@ -53,15 +53,15 @@ function Userslist() {
             dataIndex: "createdAt",
             render: (record, text) => moment(record.createdAt).format("DD-MM-YYYY"),
         },
-        {
-            title: "Actions",
-            dataIndex: "actions",
-            render: (text, record) => (
-                <div className="d-flex">
-                    <h1 className="anchor">Block</h1>
-                </div>
-            ),
-        },
+        // {
+        //     title: "Actions",
+        //     dataIndex: "actions",
+        //     render: (text, record) => (
+        //         <div className="d-flex">
+        //             <h1 className="anchor">Block</h1>
+        //         </div>
+        //     ),
+        // },
     ];
 
     return (
